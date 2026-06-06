@@ -1,0 +1,31 @@
+# Terraform
+**/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Secrets and local config
+*.pem
+*.key
+*.env
+*.env.*
+!*.env.example
+terraform.tfvars
+*.auto.tfvars
+*.auto.tfvars.json
+
+# OS/editor
+.DS_Store
+.idea/
+.vscode/
+
+# Local planning / agent notes
+AGENTS.md
+docs/SPEC.md
+.codex-notes/
