@@ -4,10 +4,16 @@ variable "aws_region" {
   default     = "ap-northeast-1"
 }
 
-variable "project" {
-  description = "Project name used in resource names and tags."
+variable "project_short" {
+  description = "Short project code used in AWS resource names."
   type        = string
-  default     = "fig-infra-bild"
+  default     = "fig"
+}
+
+variable "project_name" {
+  description = "Human-readable project name used in tags."
+  type        = string
+  default     = "form-invoice-generator"
 }
 
 variable "environment" {
