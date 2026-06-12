@@ -29,3 +29,6 @@ terraform.tfvars
 AGENTS.md
 docs/SPEC.md
 .codex-notes/
+
+# Local learning materials
+learning/
