@@ -51,3 +51,51 @@ variable "private_subnet_c_az" {
   type        = string
   default     = "ap-northeast-1c"
 }
+
+variable "db_name" {
+  description = "Initial database name for PostgreSQL."
+  type        = string
+  default     = "form_invoice_generator_db"
+}
+
+variable "db_master_username" {
+  description = "Master username for PostgreSQL."
+  type        = string
+  default     = "fig_master"
+}
+
+variable "db_instance_class" {
+  description = "Instance class for the PostgreSQL RDS instance."
+  type        = string
+  default     = "db.t4g.micro"
+}
+
+variable "db_allocated_storage" {
+  description = "Allocated storage for PostgreSQL in GiB."
+  type        = number
+  default     = 20
+}
+
+variable "db_storage_type" {
+  description = "Storage type for PostgreSQL."
+  type        = string
+  default     = "gp3"
+}
+
+variable "db_backup_retention_period" {
+  description = "Backup retention period for PostgreSQL in days."
+  type        = number
+  default     = 7
+}
+
+variable "db_deletion_protection" {
+  description = "Whether deletion protection is enabled for PostgreSQL."
+  type        = bool
+  default     = true
+}
+
+variable "app_database_url_secret_name" {
+  description = "Name of the Secrets Manager secret for the application DATABASE_URL."
+  type        = string
+  default     = "fig-dev/database-url"
+}

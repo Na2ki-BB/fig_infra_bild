@@ -65,3 +65,35 @@ output "s3_gateway_vpc_endpoint_id" {
   description = "ID of the S3 gateway VPC endpoint."
   value       = aws_vpc_endpoint.s3.id
 }
+
+output "rds_endpoint" {
+  description = "Endpoint address of the PostgreSQL RDS instance."
+  value       = aws_db_instance.postgres.address
+}
+
+output "rds_port" {
+  description = "Port of the PostgreSQL RDS instance."
+  value       = aws_db_instance.postgres.port
+}
+
+output "rds_db_name" {
+  description = "Database name for the application."
+  value       = aws_db_instance.postgres.db_name
+}
+
+output "rds_master_username" {
+  description = "Master username for PostgreSQL."
+  value       = aws_db_instance.postgres.username
+}
+
+output "rds_master_user_secret_arn" {
+  description = "ARN of the RDS-managed master user secret."
+  value       = aws_db_instance.postgres.master_user_secret[0].secret_arn
+  sensitive   = true
+}
+
+output "app_database_url_secret_arn" {
+  description = "ARN of the application DATABASE_URL secret."
+  value       = aws_secretsmanager_secret.app_database_url.arn
+  sensitive   = true
+}
