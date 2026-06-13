@@ -50,3 +50,18 @@ output "vpc_endpoint_security_group_id" {
   description = "ID of the interface VPC endpoint security group."
   value       = aws_security_group.vpc_endpoint.id
 }
+
+output "interface_vpc_endpoint_ids" {
+  description = "IDs of the interface VPC endpoints."
+  value = {
+    ecr_api        = aws_vpc_endpoint.ecr_api.id
+    ecr_dkr        = aws_vpc_endpoint.ecr_dkr.id
+    logs           = aws_vpc_endpoint.logs.id
+    secretsmanager = aws_vpc_endpoint.secretsmanager.id
+  }
+}
+
+output "s3_gateway_vpc_endpoint_id" {
+  description = "ID of the S3 gateway VPC endpoint."
+  value       = aws_vpc_endpoint.s3.id
+}
