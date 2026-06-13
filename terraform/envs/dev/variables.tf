@@ -261,3 +261,21 @@ variable "app_cors_allowed_origin" {
   type        = string
   default     = "https://example.invalid"
 }
+
+variable "api_service_name" {
+  description = "Name of the ECS service for the API."
+  type        = string
+  default     = "fig-dev-api-service"
+}
+
+variable "api_desired_count" {
+  description = "Desired number of running API ECS tasks."
+  type        = number
+  default     = 1
+}
+
+variable "api_assign_public_ip" {
+  description = "Whether to assign a public IP to API ECS tasks."
+  type        = bool
+  default     = false
+}

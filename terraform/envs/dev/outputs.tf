@@ -167,3 +167,13 @@ output "migration_task_definition_arn" {
   description = "ARN of the migration ECS task definition."
   value       = aws_ecs_task_definition.migrations.arn
 }
+
+output "api_service_name" {
+  description = "Name of the API ECS service."
+  value       = aws_ecs_service.api.name
+}
+
+output "api_service_id" {
+  description = "ID of the API ECS service."
+  value       = aws_ecs_service.api.id
+}
