@@ -153,3 +153,33 @@ variable "migration_task_role_name" {
   type        = string
   default     = "fig-dev-migration-task-role"
 }
+
+variable "alb_name" {
+  description = "Name of the internal ALB for the API."
+  type        = string
+  default     = "fig-dev-api-alb"
+}
+
+variable "target_group_name" {
+  description = "Name of the ALB target group for the API."
+  type        = string
+  default     = "fig-dev-api-tg"
+}
+
+variable "alb_listener_port" {
+  description = "Port for the internal ALB HTTP listener."
+  type        = number
+  default     = 80
+}
+
+variable "api_container_port" {
+  description = "Container port for the API service."
+  type        = number
+  default     = 8080
+}
+
+variable "health_check_path" {
+  description = "Health check path for the API target group."
+  type        = string
+  default     = "/health"
+}

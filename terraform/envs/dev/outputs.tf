@@ -132,3 +132,23 @@ output "migration_task_role_arn" {
   description = "ARN of the migration ECS task role."
   value       = aws_iam_role.migration_task.arn
 }
+
+output "alb_arn" {
+  description = "ARN of the internal API ALB."
+  value       = aws_lb.api.arn
+}
+
+output "alb_dns_name" {
+  description = "DNS name of the internal API ALB."
+  value       = aws_lb.api.dns_name
+}
+
+output "alb_listener_arn" {
+  description = "ARN of the internal API ALB HTTP listener."
+  value       = aws_lb_listener.http.arn
+}
+
+output "api_target_group_arn" {
+  description = "ARN of the API ALB target group."
+  value       = aws_lb_target_group.api.arn
+}
