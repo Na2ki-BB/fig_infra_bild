@@ -99,3 +99,57 @@ variable "app_database_url_secret_name" {
   type        = string
   default     = "fig-dev/database-url"
 }
+
+variable "api_ecr_repository_name" {
+  description = "Name of the ECR repository for the API image."
+  type        = string
+  default     = "fig-dev-api"
+}
+
+variable "migration_ecr_repository_name" {
+  description = "Name of the ECR repository for the migration image."
+  type        = string
+  default     = "fig-dev-migrations"
+}
+
+variable "ecr_image_tag_mutability" {
+  description = "Image tag mutability setting for ECR repositories."
+  type        = string
+  default     = "MUTABLE"
+}
+
+variable "api_log_group_name" {
+  description = "CloudWatch log group name for the API ECS task."
+  type        = string
+  default     = "/ecs/fig-dev-api"
+}
+
+variable "migration_log_group_name" {
+  description = "CloudWatch log group name for the migration ECS task."
+  type        = string
+  default     = "/ecs/fig-dev-migrations"
+}
+
+variable "log_retention_days" {
+  description = "CloudWatch log retention period in days."
+  type        = number
+  default     = 7
+}
+
+variable "ecs_task_execution_role_name" {
+  description = "Name of the ECS task execution IAM role."
+  type        = string
+  default     = "fig-dev-ecs-task-execution-role"
+}
+
+variable "api_task_role_name" {
+  description = "Name of the API ECS task IAM role."
+  type        = string
+  default     = "fig-dev-ecs-task-role"
+}
+
+variable "migration_task_role_name" {
+  description = "Name of the migration ECS task IAM role."
+  type        = string
+  default     = "fig-dev-migration-task-role"
+}

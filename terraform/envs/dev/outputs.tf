@@ -97,3 +97,38 @@ output "app_database_url_secret_arn" {
   value       = aws_secretsmanager_secret.app_database_url.arn
   sensitive   = true
 }
+
+output "api_ecr_repository_url" {
+  description = "Repository URL for the API ECR repository."
+  value       = aws_ecr_repository.api.repository_url
+}
+
+output "migration_ecr_repository_url" {
+  description = "Repository URL for the migration ECR repository."
+  value       = aws_ecr_repository.migrations.repository_url
+}
+
+output "api_log_group_name" {
+  description = "CloudWatch log group name for the API ECS task."
+  value       = aws_cloudwatch_log_group.api.name
+}
+
+output "migration_log_group_name" {
+  description = "CloudWatch log group name for the migration ECS task."
+  value       = aws_cloudwatch_log_group.migrations.name
+}
+
+output "ecs_task_execution_role_arn" {
+  description = "ARN of the ECS task execution role."
+  value       = aws_iam_role.ecs_task_execution.arn
+}
+
+output "api_task_role_arn" {
+  description = "ARN of the API ECS task role."
+  value       = aws_iam_role.api_task.arn
+}
+
+output "migration_task_role_arn" {
+  description = "ARN of the migration ECS task role."
+  value       = aws_iam_role.migration_task.arn
+}
