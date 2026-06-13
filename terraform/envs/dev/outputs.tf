@@ -152,3 +152,18 @@ output "api_target_group_arn" {
   description = "ARN of the API ALB target group."
   value       = aws_lb_target_group.api.arn
 }
+
+output "ecs_cluster_name" {
+  description = "Name of the ECS cluster."
+  value       = aws_ecs_cluster.main.name
+}
+
+output "api_task_definition_arn" {
+  description = "ARN of the API ECS task definition."
+  value       = aws_ecs_task_definition.api.arn
+}
+
+output "migration_task_definition_arn" {
+  description = "ARN of the migration ECS task definition."
+  value       = aws_ecs_task_definition.migrations.arn
+}

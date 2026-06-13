@@ -183,3 +183,81 @@ variable "health_check_path" {
   type        = string
   default     = "/health"
 }
+
+variable "ecs_cluster_name" {
+  description = "Name of the ECS cluster."
+  type        = string
+  default     = "fig-dev-cluster"
+}
+
+variable "api_task_family" {
+  description = "Family name for the API ECS task definition."
+  type        = string
+  default     = "fig-dev-api"
+}
+
+variable "migration_task_family" {
+  description = "Family name for the migration ECS task definition."
+  type        = string
+  default     = "fig-dev-migrations"
+}
+
+variable "api_container_name" {
+  description = "Container name for the API task."
+  type        = string
+  default     = "api"
+}
+
+variable "migration_container_name" {
+  description = "Container name for the migration task."
+  type        = string
+  default     = "migrations"
+}
+
+variable "api_image_tag" {
+  description = "Image tag for the API container."
+  type        = string
+  default     = "latest"
+}
+
+variable "migration_image_tag" {
+  description = "Image tag for the migration container."
+  type        = string
+  default     = "latest"
+}
+
+variable "api_cpu" {
+  description = "CPU units for the API ECS task."
+  type        = number
+  default     = 256
+}
+
+variable "api_memory" {
+  description = "Memory for the API ECS task in MiB."
+  type        = number
+  default     = 512
+}
+
+variable "migration_cpu" {
+  description = "CPU units for the migration ECS task."
+  type        = number
+  default     = 256
+}
+
+variable "migration_memory" {
+  description = "Memory for the migration ECS task in MiB."
+  type        = number
+  default     = 512
+}
+
+variable "app_auth_mode" {
+  description = "Authentication mode for the API application."
+  type        = string
+  default     = "trusted_gateway"
+}
+
+variable "app_cors_allowed_origin" {
+  description = "Allowed CORS origin for the API application."
+  type        = string
+  default     = "https://example.invalid"
+}
