@@ -55,7 +55,7 @@ variable "private_subnet_c_az" {
 variable "db_name" {
   description = "Initial database name for PostgreSQL."
   type        = string
-  default     = "form_invoice_generator_db"
+  default     = "form_invoice_generator"
 }
 
 variable "db_master_username" {
