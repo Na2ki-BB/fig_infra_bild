@@ -65,6 +65,8 @@ Do not commit secrets, Terraform state, plan files, or local override files.
 ```text
 .
 ├── README.md
+├── docs/
+│   └── MVP.md
 └── terraform/
     └── envs/
         └── dev/

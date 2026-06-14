@@ -1,49 +1,101 @@
 # MVP
 
+This document defines the current dev-environment MVP for this infrastructure repository.
+
+The application source code lives in a separate repository:
+
+```text
+https://github.com/Na2ki-BB/form_invoice_generator.git
+```
+
+This repository provides Terraform infrastructure for running that application on AWS.
+
 ## Objective
 
-Terraform で dev 環境を一度作成し、手動構築済み AWS 環境と同等の最小 Web アプリケーション公開経路を再現する。
+Define the AWS dev infrastructure needed to run `form_invoice_generator` with Terraform.
 
-## Definition of Done
+The Terraform configuration is intended to be reusable by someone who wants to deploy the application repository on AWS. It is not the application repository itself.
 
-- `terraform/envs/dev` に実リソース定義がある。
-- `terraform fmt -recursive terraform` が通る。
-- `terraform validate` が通る。
-- `terraform plan` の差分を説明できる。
-- Web アプリケーションの公開 URL または DNS 名にアクセスできる。
-- 手動構築リソースを import した場合、import 手順が記録されている。
+## Current Scope
 
-## Phase 1: Discovery
+The MVP dev architecture is:
 
-- 手動構築済み AWS リソースを棚卸しする。
-- アプリケーションの実行方式を確認する。
-- 必要な環境変数、シークレット、ポート、ヘルスチェックパスを確認する。
-- Terraform state backend を決める。
+```text
+Browser
+  -> Amplify Hosting
+  -> API Gateway HTTP API
+  -> API Gateway VPC Link
+  -> Internal ALB
+  -> ECS Fargate API task
+  -> RDS PostgreSQL
+```
 
-## Phase 2: Terraform Foundation
+Supporting services:
 
-- AWS provider と version constraints を固定する。
-- dev 環境 root module を整える。
-- 共通タグ、命名規則、基本変数を定義する。
-- `.gitignore` で Terraform の生成物と秘密情報を除外する。
+```text
+Cognito
+ECR
+CloudWatch Logs
+IAM
+Secrets Manager
+VPC Endpoints
+```
 
-## Phase 3: First Deployable Infra
+## Included Terraform Resources
 
-選択した実行方式に応じて、最小構成を作る。
+The MVP includes Terraform definitions for:
 
-| Runtime | Minimum resources |
-| --- | --- |
-| Static site | S3 bucket, CloudFront distribution, ACM certificate if custom domain is used. |
-| App Runner | Service, ECR or source connection, environment variables, IAM role if needed. |
-| ECS Fargate | VPC, subnets, ALB, ECS cluster, service, task definition, logs, IAM roles. |
-| Lambda API | Lambda function, API Gateway, IAM role, logs, custom domain if needed. |
-| EC2 | VPC/security group, instance, IAM role, logs, optional ALB. |
+- VPC, private subnets, and private route table
+- Security Groups
+- Interface VPC Endpoints for ECR, CloudWatch Logs, and Secrets Manager
+- S3 Gateway VPC Endpoint
+- RDS PostgreSQL
+- Secrets Manager secret metadata for application `DATABASE_URL`
+- ECR repositories for API and migration images
+- CloudWatch log groups
+- ECS IAM roles
+- Internal ALB, listener, and target group
+- ECS cluster, API task definition, migration task definition, and API service
+- Cognito User Pool, App Client, and hosted domain
+- API Gateway HTTP API, routes, VPC Link, integration, stage, and JWT authorizer
+- Amplify App and branch for the frontend
 
-## Deferred
+## Not Included
 
-- Production environment
-- Full CI/CD
-- Blue/green deployment
-- Advanced observability
-- WAF and detailed threat controls
-- Cost dashboards and budgets
+The MVP does not include:
+
+- application source code
+- automatic Docker image build or push
+- actual secret values such as `DATABASE_URL`
+- automatic database migration execution
+- custom domain management
+- ACM certificate management
+- production environment
+- shared Terraform backend
+- full CI/CD pipeline
+- monitoring dashboards or alerting
+
+## Completion Criteria
+
+This MVP is considered complete when:
+
+- Terraform resources are defined under `terraform/envs/dev`.
+- `terraform fmt -recursive terraform` succeeds.
+- `terraform -chdir=terraform/envs/dev validate` succeeds.
+- `terraform -chdir=terraform/envs/dev plan` produces the expected create-only plan.
+- README explains how another user can use this infrastructure repository with the separate application repository.
+- Secrets, Terraform state, plan files, and local override files are not committed.
+
+## Current Status
+
+The Terraform draft for the dev environment is complete for the learning/reproduction goal.
+
+The repository is not yet a full production deployment system. To use it for a real deployment, the user still needs to handle:
+
+- AWS account and credential setup
+- Terraform state ownership
+- Docker image build and push
+- application `DATABASE_URL` secret value
+- database migrations
+- runtime verification
+- cost cleanup
