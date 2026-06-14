@@ -250,5 +250,5 @@ output "amplify_branch_name" {
 
 output "amplify_branch_url" {
   description = "Default URL of the Amplify frontend branch."
-  value       = "https://${aws_amplify_branch.main.branch_name}.${aws_amplify_app.frontend.default_domain}"
+  value       = local.amplify_branch_url
 }

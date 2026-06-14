@@ -33,11 +33,11 @@ resource "aws_cognito_user_pool_client" "admin_spa" {
   supported_identity_providers         = var.cognito_identity_providers
 
   callback_urls = [
-    var.cognito_callback_url,
+    local.amplify_cognito_callback_url,
   ]
 
   logout_urls = [
-    var.cognito_logout_url,
+    local.amplify_cognito_logout_url,
   ]
 
   explicit_auth_flows = [

@@ -3,7 +3,7 @@ resource "aws_apigatewayv2_api" "http" {
   protocol_type = "HTTP"
 
   cors_configuration {
-    allow_origins  = var.api_cors_allowed_origins
+    allow_origins  = [local.amplify_branch_url]
     allow_methods  = var.api_cors_allowed_methods
     allow_headers  = var.api_cors_allowed_headers
     expose_headers = var.api_cors_expose_headers

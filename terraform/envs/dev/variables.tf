@@ -256,12 +256,6 @@ variable "app_auth_mode" {
   default     = "trusted_gateway"
 }
 
-variable "app_cors_allowed_origin" {
-  description = "Allowed CORS origin for the API application."
-  type        = string
-  default     = "https://example.invalid"
-}
-
 variable "api_service_name" {
   description = "Name of the ECS service for the API."
   type        = string
@@ -296,18 +290,6 @@ variable "cognito_domain_prefix" {
   description = "Domain prefix for the Cognito hosted login domain. Must be unique in the region."
   type        = string
   default     = "fig-dev-admin-auth"
-}
-
-variable "cognito_callback_url" {
-  description = "OAuth callback URL for the admin SPA. Replace with the Amplify URL later."
-  type        = string
-  default     = "https://example.invalid/admin/auth/callback"
-}
-
-variable "cognito_logout_url" {
-  description = "OAuth logout URL for the admin SPA. Replace with the Amplify URL later."
-  type        = string
-  default     = "https://example.invalid/admin/login"
 }
 
 variable "cognito_oauth_flows" {
@@ -356,12 +338,6 @@ variable "api_payload_format_version" {
   description = "Payload format version for the API Gateway HTTP proxy integration."
   type        = string
   default     = "1.0"
-}
-
-variable "api_cors_allowed_origins" {
-  description = "Allowed CORS origins for the HTTP API. Replace with the Amplify URL later."
-  type        = list(string)
-  default     = ["https://example.invalid"]
 }
 
 variable "api_cors_allowed_methods" {

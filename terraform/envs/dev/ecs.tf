@@ -73,7 +73,7 @@ resource "aws_ecs_task_definition" "api" {
         },
         {
           name  = "APP_CORS_ALLOWED_ORIGIN"
-          value = var.app_cors_allowed_origin
+          value = local.amplify_branch_url
         }
       ]
 
