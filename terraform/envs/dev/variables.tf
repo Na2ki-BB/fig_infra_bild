@@ -393,3 +393,33 @@ variable "jwt_authorizer_name" {
   type        = string
   default     = "fig-dev-cognito-admin-authorizer"
 }
+
+variable "amplify_app_name" {
+  description = "Name of the Amplify app for the frontend."
+  type        = string
+  default     = "fig-dev-frontend"
+}
+
+variable "amplify_repository_url" {
+  description = "GitHub repository URL for the frontend application."
+  type        = string
+  default     = "https://github.com/Na2ki-BB/form_invoice_generator.git"
+}
+
+variable "amplify_branch_name" {
+  description = "Git branch name deployed by Amplify."
+  type        = string
+  default     = "main"
+}
+
+variable "amplify_monorepo_app_root" {
+  description = "Frontend app root path inside the application repository."
+  type        = string
+  default     = "frontend"
+}
+
+variable "amplify_platform" {
+  description = "Amplify app platform."
+  type        = string
+  default     = "WEB"
+}

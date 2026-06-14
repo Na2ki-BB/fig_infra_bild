@@ -232,3 +232,23 @@ output "api_gateway_authorizer_id" {
   description = "ID of the API Gateway Cognito JWT authorizer."
   value       = aws_apigatewayv2_authorizer.admin.id
 }
+
+output "amplify_app_id" {
+  description = "ID of the Amplify frontend app."
+  value       = aws_amplify_app.frontend.id
+}
+
+output "amplify_default_domain" {
+  description = "Default domain of the Amplify frontend app."
+  value       = aws_amplify_app.frontend.default_domain
+}
+
+output "amplify_branch_name" {
+  description = "Name of the Amplify frontend branch."
+  value       = aws_amplify_branch.main.branch_name
+}
+
+output "amplify_branch_url" {
+  description = "Default URL of the Amplify frontend branch."
+  value       = "https://${aws_amplify_branch.main.branch_name}.${aws_amplify_app.frontend.default_domain}"
+}
