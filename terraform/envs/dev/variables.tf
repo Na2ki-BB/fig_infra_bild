@@ -327,3 +327,69 @@ variable "cognito_identity_providers" {
   type        = list(string)
   default     = ["COGNITO"]
 }
+
+variable "http_api_name" {
+  description = "Name of the API Gateway HTTP API."
+  type        = string
+  default     = "fig-dev-api"
+}
+
+variable "api_stage_name" {
+  description = "Name of the API Gateway stage."
+  type        = string
+  default     = "$default"
+}
+
+variable "api_stage_auto_deploy" {
+  description = "Whether API Gateway stage auto deploy is enabled."
+  type        = bool
+  default     = true
+}
+
+variable "api_vpc_link_name" {
+  description = "Name of the API Gateway VPC Link."
+  type        = string
+  default     = "fig-dev-api-vpc-link"
+}
+
+variable "api_payload_format_version" {
+  description = "Payload format version for the API Gateway HTTP proxy integration."
+  type        = string
+  default     = "1.0"
+}
+
+variable "api_cors_allowed_origins" {
+  description = "Allowed CORS origins for the HTTP API. Replace with the Amplify URL later."
+  type        = list(string)
+  default     = ["https://example.invalid"]
+}
+
+variable "api_cors_allowed_methods" {
+  description = "Allowed CORS methods for the HTTP API."
+  type        = list(string)
+  default     = ["GET", "POST", "PUT", "OPTIONS"]
+}
+
+variable "api_cors_allowed_headers" {
+  description = "Allowed CORS headers for the HTTP API."
+  type        = list(string)
+  default     = ["Content-Type", "Authorization"]
+}
+
+variable "api_cors_expose_headers" {
+  description = "CORS response headers exposed to the browser."
+  type        = list(string)
+  default     = ["Content-Disposition"]
+}
+
+variable "api_cors_max_age" {
+  description = "CORS preflight cache duration in seconds."
+  type        = number
+  default     = 300
+}
+
+variable "jwt_authorizer_name" {
+  description = "Name of the API Gateway JWT authorizer for admin routes."
+  type        = string
+  default     = "fig-dev-cognito-admin-authorizer"
+}

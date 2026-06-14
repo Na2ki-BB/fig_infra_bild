@@ -202,3 +202,33 @@ output "cognito_issuer" {
   description = "JWT issuer URL for the Cognito User Pool."
   value       = "https://cognito-idp.${var.aws_region}.amazonaws.com/${aws_cognito_user_pool.admin.id}"
 }
+
+output "api_gateway_id" {
+  description = "ID of the API Gateway HTTP API."
+  value       = aws_apigatewayv2_api.http.id
+}
+
+output "api_gateway_endpoint" {
+  description = "Endpoint URL of the API Gateway HTTP API."
+  value       = aws_apigatewayv2_api.http.api_endpoint
+}
+
+output "api_gateway_stage_name" {
+  description = "Name of the API Gateway stage."
+  value       = aws_apigatewayv2_stage.default.name
+}
+
+output "api_gateway_vpc_link_id" {
+  description = "ID of the API Gateway VPC Link."
+  value       = aws_apigatewayv2_vpc_link.api.id
+}
+
+output "api_gateway_integration_id" {
+  description = "ID of the API Gateway ALB integration."
+  value       = aws_apigatewayv2_integration.alb.id
+}
+
+output "api_gateway_authorizer_id" {
+  description = "ID of the API Gateway Cognito JWT authorizer."
+  value       = aws_apigatewayv2_authorizer.admin.id
+}
