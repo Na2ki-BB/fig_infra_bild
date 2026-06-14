@@ -177,3 +177,28 @@ output "api_service_id" {
   description = "ID of the API ECS service."
   value       = aws_ecs_service.api.id
 }
+
+output "cognito_user_pool_id" {
+  description = "ID of the Cognito User Pool for admin users."
+  value       = aws_cognito_user_pool.admin.id
+}
+
+output "cognito_user_pool_arn" {
+  description = "ARN of the Cognito User Pool for admin users."
+  value       = aws_cognito_user_pool.admin.arn
+}
+
+output "cognito_app_client_id" {
+  description = "ID of the Cognito App Client for the admin SPA."
+  value       = aws_cognito_user_pool_client.admin_spa.id
+}
+
+output "cognito_domain" {
+  description = "Hosted login domain for the Cognito User Pool."
+  value       = "https://${aws_cognito_user_pool_domain.admin.domain}.auth.${var.aws_region}.amazoncognito.com"
+}
+
+output "cognito_issuer" {
+  description = "JWT issuer URL for the Cognito User Pool."
+  value       = "https://cognito-idp.${var.aws_region}.amazonaws.com/${aws_cognito_user_pool.admin.id}"
+}

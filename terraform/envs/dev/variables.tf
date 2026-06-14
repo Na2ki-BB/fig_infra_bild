@@ -279,3 +279,51 @@ variable "api_assign_public_ip" {
   type        = bool
   default     = false
 }
+
+variable "cognito_user_pool_name" {
+  description = "Name of the Cognito User Pool for admin users."
+  type        = string
+  default     = "fig-dev-admin-users"
+}
+
+variable "cognito_app_client_name" {
+  description = "Name of the Cognito App Client for the admin SPA."
+  type        = string
+  default     = "fig-dev-admin-spa"
+}
+
+variable "cognito_domain_prefix" {
+  description = "Domain prefix for the Cognito hosted login domain. Must be unique in the region."
+  type        = string
+  default     = "fig-dev-admin-auth"
+}
+
+variable "cognito_callback_url" {
+  description = "OAuth callback URL for the admin SPA. Replace with the Amplify URL later."
+  type        = string
+  default     = "https://example.invalid/admin/auth/callback"
+}
+
+variable "cognito_logout_url" {
+  description = "OAuth logout URL for the admin SPA. Replace with the Amplify URL later."
+  type        = string
+  default     = "https://example.invalid/admin/login"
+}
+
+variable "cognito_oauth_flows" {
+  description = "OAuth flows enabled for the Cognito App Client."
+  type        = list(string)
+  default     = ["code"]
+}
+
+variable "cognito_oauth_scopes" {
+  description = "OAuth scopes enabled for the Cognito App Client."
+  type        = list(string)
+  default     = ["openid", "email", "profile"]
+}
+
+variable "cognito_identity_providers" {
+  description = "Identity providers enabled for the Cognito App Client."
+  type        = list(string)
+  default     = ["COGNITO"]
+}
