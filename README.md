@@ -1,24 +1,24 @@
 # fig_infra_bild
 
-Terraform infrastructure for running `form_invoice_generator` on AWS.
+`form_invoice_generator` を AWS 上で動かすための Terraform インフラリポジトリです。
 
-The application source code lives in a separate repository.
+アプリケーション本体のソースコードは、別リポジトリにあります。
 
 ```text
-Application:
+アプリケーション:
   https://github.com/Na2ki-BB/form_invoice_generator.git
 
-Infrastructure:
-  this repository
+インフラ:
+  このリポジトリ
 ```
 
-This repository does not contain application code. It manages the AWS infrastructure needed for the application, including networking, database, ECS, API Gateway, Cognito, and Amplify.
+このリポジトリにはアプリケーションコードは含まれていません。ネットワーク、データベース、ECS、API Gateway、Cognito、Amplify など、アプリケーションを動かすために必要な AWS インフラを管理します。
 
-## What This Creates
+## 作成するもの
 
-`terraform/envs/dev` is the Terraform root module for the development/test AWS environment.
+`terraform/envs/dev` は、開発・検証用 AWS 環境の Terraform root module です。
 
-Main architecture:
+主な構成は次の通りです。
 
 ```text
 Browser
@@ -30,37 +30,37 @@ Browser
   -> RDS PostgreSQL
 ```
 
-Main AWS resources defined by Terraform:
+Terraform で定義している主な AWS リソースは次の通りです。
 
-- VPC, private subnets, and private route table
-- Security Groups
-- VPC Endpoints for ECR, CloudWatch Logs, Secrets Manager, and S3
+- VPC、private subnet、private route table
+- Security Group
+- ECR、CloudWatch Logs、Secrets Manager、S3 用の VPC Endpoint
 - RDS PostgreSQL
-- Secrets Manager secret metadata for the application `DATABASE_URL`
-- ECR repositories for API and migration images
-- CloudWatch log groups
-- IAM roles for ECS tasks
-- Internal ALB and target group
-- ECS cluster, task definitions, and API service
-- Cognito User Pool, App Client, and hosted domain
-- API Gateway HTTP API, routes, VPC Link, and JWT authorizer
-- Amplify App and branch for the frontend
+- アプリケーション用 `DATABASE_URL` の Secrets Manager secret metadata
+- API image と migration image 用の ECR repository
+- CloudWatch log group
+- ECS task 用の IAM role
+- Internal ALB と target group
+- ECS cluster、task definition、API service
+- Cognito User Pool、App Client、hosted domain
+- API Gateway HTTP API、route、VPC Link、JWT authorizer
+- frontend 用の Amplify App と branch
 
-## What This Does Not Do
+## このリポジトリで行わないこと
 
-This repository does not:
+このリポジトリでは、次のことは行いません。
 
-- contain the application source code
-- build or push Docker images automatically
-- write actual secret values such as `DATABASE_URL`
-- run database migrations automatically
-- manage a custom domain or ACM certificate
-- configure a shared Terraform backend
-- store GitHub tokens or AWS credentials
+- アプリケーション本体の実装
+- Docker image の自動 build / push
+- `DATABASE_URL` などの secret 実値の書き込み
+- database migration の自動実行
+- custom domain や ACM certificate の管理
+- shared Terraform backend の設定
+- GitHub token や AWS credential の保存
 
-Do not commit secrets, Terraform state, plan files, or local override files.
+secret、Terraform state、plan file、local override file はコミットしないでください。
 
-## Repository Layout
+## ディレクトリ構成
 
 ```text
 .
@@ -89,25 +89,25 @@ Do not commit secrets, Terraform state, plan files, or local override files.
             └── outputs.tf
 ```
 
-## Prerequisites
+## 前提
 
-Install and configure:
+次のものを用意してください。
 
 - Terraform `>= 1.6.0, < 2.0.0`
 - AWS CLI
-- AWS credentials for the target AWS account
-- Docker, if you will build and push application images
-- access to `https://github.com/Na2ki-BB/form_invoice_generator.git`
+- 対象 AWS account の認証情報
+- Docker。アプリケーション image を build / push する場合に必要です
+- `https://github.com/Na2ki-BB/form_invoice_generator.git` へのアクセス権
 
-Before running Terraform against a real AWS account, confirm the active account.
+実際の AWS account に対して Terraform を実行する前に、操作対象の account を確認してください。
 
 ```bash
 aws sts get-caller-identity
 ```
 
-## Terraform Workflow
+## Terraform の基本操作
 
-Run commands from this repository root.
+コマンドは、このリポジトリのルートで実行します。
 
 ```bash
 terraform -chdir=terraform/envs/dev init
@@ -116,90 +116,90 @@ terraform -chdir=terraform/envs/dev validate
 terraform -chdir=terraform/envs/dev plan
 ```
 
-To create real AWS resources, review the plan carefully and then run:
+実際に AWS リソースを作成する場合は、`plan` の内容をよく確認してから実行します。
 
 ```bash
 terraform -chdir=terraform/envs/dev apply
 ```
 
-Do not run `apply` unless you intend to create billable AWS resources.
+`apply` は課金対象の AWS リソースを作成します。実際に作成する意図がある場合だけ実行してください。
 
-## Local Overrides
+## ローカルで値を上書きする場合
 
-Default values live in:
+デフォルト値は次のファイルにあります。
 
 ```text
 terraform/envs/dev/variables.tf
 ```
 
-For local changes, create:
+ローカルで値を上書きする場合は、次のファイルを作成します。
 
 ```text
 terraform/envs/dev/terraform.tfvars
 ```
 
-`terraform.tfvars` is ignored by Git.
+`terraform.tfvars` は Git 管理対象外です。
 
-Example:
+例:
 
 ```hcl
 aws_region = "ap-northeast-1"
 
-# Use 0 if images, secrets, or migrations are not ready yet.
+# image、secret、migration の準備ができていない場合は 0 にします。
 api_desired_count = 0
 
 amplify_repository_url = "https://github.com/Na2ki-BB/form_invoice_generator.git"
 ```
 
-Do not put passwords, tokens, AWS keys, or full database URLs in `terraform.tfvars`.
+`terraform.tfvars` に password、token、AWS key、完全な database URL を書かないでください。
 
-## Amplify Repository Access
+## Amplify の GitHub 接続
 
-Amplify is configured to build the frontend from:
+Amplify は次のリポジトリから frontend を build する設定です。
 
 ```text
 https://github.com/Na2ki-BB/form_invoice_generator.git
 ```
 
-The frontend app root is:
+frontend の app root は次の通りです。
 
 ```text
 frontend
 ```
 
-GitHub repository URLs are configuration values. GitHub tokens are secrets.
+GitHub repository URL は設定値です。GitHub token は secret です。
 
-This repository does not commit an Amplify GitHub token. If Amplify requires repository authorization during real deployment, connect the repository through a non-committed method, such as the Amplify GitHub App or another secure token workflow.
+このリポジトリには Amplify 用の GitHub token をコミットしません。実デプロイ時に Amplify 側で repository authorization が必要な場合は、Amplify GitHub App やその他の安全な token 管理など、コミットされない方法で接続してください。
 
-## After Creating Infrastructure
+## インフラ作成後に必要な作業
 
-If you create the infrastructure, the application still needs runtime artifacts and secrets.
+インフラを作成した後も、アプリケーションを動かすには runtime artifact と secret が別途必要です。
 
-### 1. Build and Push Images
+### 1. Docker image を build / push する
 
-Terraform creates ECR repositories, but it does not push Docker images.
+Terraform は ECR repository を作成しますが、Docker image は push しません。
 
-Useful outputs:
+ECR repository URL は output で確認できます。
 
 ```bash
 terraform -chdir=terraform/envs/dev output api_ecr_repository_url
 terraform -chdir=terraform/envs/dev output migration_ecr_repository_url
 ```
 
-The application repository contains:
+アプリケーションリポジトリには、次の Dockerfile があります。
 
 ```text
 backend/Dockerfile
 deploy/migrations/Dockerfile
 ```
 
-Build and push the API image and migration image to the ECR repository URLs from Terraform output.
+Terraform output の ECR repository URL に対して、API image と migration image を build / push してください。
 
-### 2. Set the DATABASE_URL Secret
+### 2. DATABASE_URL secret を設定する
 
-Terraform creates the Secrets Manager secret container for the application `DATABASE_URL`, but it does not write the actual secret value.
+Terraform はアプリケーション用 `DATABASE_URL` の Secrets Manager secret container を作成しますが、実際の secret value は書き込みません。
 
-Useful outputs:
+必要な output は次のコマンドで確認できます。
 
 ```bash
 terraform -chdir=terraform/envs/dev output rds_endpoint
@@ -209,45 +209,45 @@ terraform -chdir=terraform/envs/dev output rds_master_username
 terraform -chdir=terraform/envs/dev output app_database_url_secret_arn
 ```
 
-Write the real `DATABASE_URL` value through AWS Console, AWS CLI, or a secure deployment workflow.
+実際の `DATABASE_URL` は、AWS Console、AWS CLI、または安全なデプロイ手順で設定してください。
 
-Do not paste the database password into Git, README files, issue comments, pull requests, or Terraform files.
+database password を Git、README、issue、pull request、Terraform file に貼らないでください。
 
-### 3. Run Migrations
+### 3. migration を実行する
 
-Terraform defines the migration ECS task definition, but it does not run migrations automatically.
+Terraform は migration 用の ECS task definition を定義しますが、migration は自動実行しません。
 
-Run the migration task only after:
+migration は、次の準備ができた後に実行してください。
 
-- RDS is available
-- the migration image has been pushed to ECR
-- the `DATABASE_URL` secret value exists
-- networking and security groups are in place
+- RDS が available になっている
+- migration image が ECR に push されている
+- `DATABASE_URL` secret value が設定されている
+- network と security group が作成済みである
 
-### 4. Start the API Service
+### 4. API service を起動する
 
-If you first created the service with:
+最初に次の設定で作成した場合、
 
 ```hcl
 api_desired_count = 0
 ```
 
-change it to:
+API task を起動するには、次のように変更します。
 
 ```hcl
 api_desired_count = 1
 ```
 
-Then run:
+その後、次のコマンドを実行します。
 
 ```bash
 terraform -chdir=terraform/envs/dev plan
 terraform -chdir=terraform/envs/dev apply
 ```
 
-## Verification
+## 動作確認
 
-Useful outputs:
+主な URL は output で確認できます。
 
 ```bash
 terraform -chdir=terraform/envs/dev output amplify_branch_url
@@ -255,13 +255,13 @@ terraform -chdir=terraform/envs/dev output api_gateway_endpoint
 terraform -chdir=terraform/envs/dev output cognito_domain
 ```
 
-Basic API health check:
+API health check の例です。
 
 ```bash
 curl -i "$(terraform -chdir=terraform/envs/dev output -raw api_gateway_endpoint)/health"
 ```
 
-Open the Amplify URL in a browser and check:
+Amplify URL をブラウザで開き、次の path を確認します。
 
 ```text
 /
@@ -270,32 +270,32 @@ Open the Amplify URL in a browser and check:
 /admin/auth/callback
 ```
 
-SPA routes should return the React app, not a hosting 404.
+SPA route では hosting 404 ではなく React app が返る必要があります。
 
-## Cost Notes
+## 費用に関する注意
 
-The dev environment contains billable resources, including:
+dev 環境には、次のような課金対象リソースが含まれます。
 
 - RDS
 - Internal ALB
-- Interface VPC Endpoints
-- ECS Fargate tasks
-- Amplify Hosting builds
+- Interface VPC Endpoint
+- ECS Fargate task
+- Amplify Hosting build
 - CloudWatch Logs
 - Secrets Manager
 - ECR storage
 
-Destroy resources when they are no longer needed:
+不要になったリソースは削除してください。
 
 ```bash
 terraform -chdir=terraform/envs/dev destroy
 ```
 
-Review the destroy plan before approving it.
+`destroy` も実行前に plan 内容を確認してください。
 
-## Git Safety
+## Git に入れてはいけないもの
 
-The repository ignores local and sensitive files such as:
+このリポジトリでは、次のような local file や secret file を ignore しています。
 
 ```text
 **/.terraform/
@@ -310,18 +310,18 @@ terraform.tfvars
 learning/
 ```
 
-Before committing, check:
+コミット前に確認してください。
 
 ```bash
 git status --short
 git diff
 ```
 
-Do not commit:
+コミットしてはいけないもの:
 
 - Terraform state
-- Terraform plan files
-- AWS account secrets
-- GitHub tokens
-- database passwords
-- actual `DATABASE_URL` values
+- Terraform plan file
+- AWS account secret
+- GitHub token
+- database password
+- 実際の `DATABASE_URL`
