@@ -388,6 +388,18 @@ variable "amplify_branch_name" {
   default     = "main"
 }
 
+variable "amplify_github_access_token" {
+  description = "GitHub setup token for a NEW Amplify app. Supply through TF_VAR_amplify_github_access_token, not a committed file. Omit only for an already connected app. The token can be retained in Terraform state/plan even though it is sensitive."
+  type        = string
+  default     = null
+  sensitive   = true
+
+  validation {
+    condition     = var.amplify_github_access_token == null ? true : length(trimspace(var.amplify_github_access_token)) > 0
+    error_message = "Use a non-empty GitHub setup token, or null for an already connected Amplify app."
+  }
+}
+
 variable "amplify_monorepo_app_root" {
   description = "Frontend app root path inside the application repository."
   type        = string

@@ -56,7 +56,7 @@ Terraform で定義している主な AWS リソースは次の通りです。
 - database migration の自動実行
 - custom domain や ACM certificate の管理
 - shared Terraform backend の設定
-- GitHub token や AWS credential の保存
+- GitHub token や AWS credential のソースコードへの保存（token を渡した Terraform state / plan は秘密として保護します）
 
 secret、Terraform state、plan file、local override file はコミットしないでください。
 
@@ -66,6 +66,7 @@ secret、Terraform state、plan file、local override file はコミットしな
 .
 ├── README.md
 ├── docs/
+│   ├── DEPLOYMENT.md
 │   └── MVP.md
 └── terraform/
     └── envs/
@@ -86,7 +87,9 @@ secret、Terraform state、plan file、local override file はコミットしな
             ├── cognito.tf
             ├── api-gateway.tf
             ├── amplify.tf
-            └── outputs.tf
+            ├── outputs.tf
+            └── tests_mock/
+                └── deployment.tftest.hcl
 ```
 
 ## 前提
@@ -104,6 +107,8 @@ secret、Terraform state、plan file、local override file はコミットしな
 ```bash
 aws sts get-caller-identity
 ```
+
+初回構築は [初回デプロイ手順](docs/DEPLOYMENT.md) の順序に従ってください。API task 数 0 で作成し、image・secret・DB 初期化を完了してから起動します。
 
 ## Terraform の基本操作
 
@@ -167,13 +172,15 @@ frontend の app root は次の通りです。
 frontend
 ```
 
-GitHub repository URL は設定値です。GitHub token は secret です。
+新規の GitHub 接続付き App 作成には `amplify_github_access_token` が必要です。対象 region の Amplify GitHub App を対象 repository に許可した上で、setup token を `TF_VAR_amplify_github_access_token` から渡します。
 
-このリポジトリには Amplify 用の GitHub token をコミットしません。実デプロイ時に Amplify 側で repository authorization が必要な場合は、Amplify GitHub App やその他の安全な token 管理など、コミットされない方法で接続してください。
+接続済み App を import する場合は token を省略できます。新規作成時の token 省略はできません。詳しい接続・import 手順は [初回デプロイ手順](docs/DEPLOYMENT.md#1-amplify-の-github-接続) を参照してください。
+
+この変数は `sensitive` ですが、Terraform state / plan には token が残り得ます。ファイル・ログを保護し、Git へ入れないでください。接続後は環境変数を解除し、setup token を失効させます。`ignore_changes` により通常更新では token を送信しません。再接続は Console で行い、App 再作成時は新しい token を渡します。
 
 ## インフラ作成後に必要な作業
 
-インフラを作成した後も、アプリケーションを動かすには runtime artifact と secret が別途必要です。
+インフラを作成した後も、アプリケーションを動かすには runtime artifact と secret が別途必要です。以下は概要です。具体的なコマンドと成功判定は [初回デプロイ手順](docs/DEPLOYMENT.md) を参照してください。
 
 ### 1. Docker image を build / push する
 
@@ -217,6 +224,8 @@ database password を Git、README、issue、pull request、Terraform file に�
 
 Terraform は migration 用の ECS task definition を定義しますが、migration は自動実行しません。
 
+migration は空 DB に対して初回だけ実行します。現アプリは非冪等な SQL を毎回実行するため、成功後や途中失敗後に盲目的に再実行しないでください。task の STOPPED だけでなく、exit code 0 と完了ログを確認します。
+
 migration は、次の準備ができた後に実行してください。
 
 - RDS が available になっている
@@ -244,6 +253,10 @@ api_desired_count = 1
 terraform -chdir=terraform/envs/dev plan
 terraform -chdir=terraform/envs/dev apply
 ```
+
+### 5. Cognito 管理者と Amplify build を確認する
+
+Cognito User Pool に管理者 user を作成し、本人が初回ログインを完了します。Amplify branch の build 成功後に UI からログイン、DB 一覧取得、テスト送信と請求書取得を確認してください。
 
 ## 動作確認
 
@@ -291,7 +304,7 @@ dev 環境には、次のような課金対象リソースが含まれます。
 terraform -chdir=terraform/envs/dev destroy
 ```
 
-`destroy` も実行前に plan 内容を確認してください。
+`destroy` も実行前に plan 内容を確認してください。既定では RDS deletion protection が有効です。`skip_final_snapshot = true` のため、削除保護を解除して destroy する前に DB の退避方針を決めてください。
 
 ## Git に入れてはいけないもの
 
