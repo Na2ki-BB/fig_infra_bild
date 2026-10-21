@@ -119,3 +119,14 @@ resource "aws_vpc_security_group_ingress_rule" "vpc_endpoint_from_ecs_https" {
   to_port                      = 443
   description                  = "Allow interface VPC endpoints to receive HTTPS traffic from ECS tasks."
 }
+
+# ECR image layers are downloaded from S3, not from the ECR interface endpoint.
+# A gateway endpoint has no security group; allow its regional S3 prefix list.
+resource "aws_vpc_security_group_egress_rule" "ecs_to_s3_https" {
+  security_group_id = aws_security_group.ecs.id
+  prefix_list_id    = aws_vpc_endpoint.s3.prefix_list_id
+  ip_protocol       = "tcp"
+  from_port         = 443
+  to_port           = 443
+  description       = "Allow ECS tasks to download ECR image layers through the S3 gateway endpoint."
+}

@@ -10,6 +10,16 @@ resource "aws_amplify_app" "frontend" {
   repository = var.amplify_repository_url
   platform   = var.amplify_platform
 
+  # Required when creating a new GitHub-connected app. An already connected,
+  # imported app can omit it. Never put this value in committed tfvars.
+  access_token = var.amplify_github_access_token
+
+  lifecycle {
+    # The token bootstraps the GitHub connection. Do not send an empty token to
+    # UpdateApp after it is removed from the operator's environment.
+    ignore_changes = [access_token]
+  }
+
   build_spec = <<-YAML
 version: 1
 applications:
